@@ -22,7 +22,8 @@ public class Main {
         int opcion = -1;
         do {
             out.println("1.Llenar una factura");
-            out.println("2.Imprimi factura");
+            out.println("2.Llenar una linea");
+            out.println("2.Imprimir factura");
             out.println("0.Salir");
             opcion = seleccionarOpcion();
             procesarOpcion(opcion);
@@ -36,17 +37,21 @@ public class Main {
 
 
     public static void procesarOpcion(int pOpcion) throws IOException {
-        switch (pOpcion) {
+        int numero = 0;
+        switch (pOpcion)
+        {
+
             case 0:
                 System.out.println("Gracias por usar el sistema");
                 break;
             case 1:
-                Llenarfactura();
+                registrarFactura();
                 break;
             case 2:
-                ImprimirFactura();
+                registrarLinea(numero);
                 break;
-
+            case 3:
+                imprimirFactura();
             default:
                 out.println("Digitó una opción no válida");
                 break;
@@ -54,17 +59,65 @@ public class Main {
     }
 
 
-    public static void Llenarfactura() throws IOException{
-        int dia;
-        int mes;
-        int anno;
-        System.out.println("Digite el dia");
-        dia = Integer.parseInt(in.readLine());
-        System.out.println("Digite el mes");
-        mes = Integer.parseInt(in.readLine());
-        System.out.println("Digite el año");
-        anno = Integer.parseInt(in.readLine());
+    public static void registrarFactura() throws IOException {
+
+        out.println("Digite el numero que tendra la factura");
+        String numero = in.readLine();
+        out.println("Digite el nombre del cliente");
+        String nombre = in.readLine();
+        out.println("Digite el dia");
+        int dia = Integer.parseInt(in.readLine());
+        out.println("Digite el mes");
+        int mes = Integer.parseInt(in.readLine());
+        out.println("Digite el año");
+        int anio = Integer.parseInt(in.readLine());
+
+        int num = 1;
+        String[] datosLin= registrarLinea(num);
+        gestor.registrarFactura(numero,nombre,dia,mes,anio,datosLin);
+
 
     }
+
+
+
+    public static String[] registrarLinea(int numero) throws IOException{
+        String[] datos = new String[4];
+
+        out.println("Digite la cantidad de productos");
+        datos[0] = in.readLine();
+        out.println("Digite el codigo del producto");
+        datos[1] = in.readLine();
+        out.println("Digite la descripcion del producto");
+        datos[2] = in.readLine();
+        out.println("Digite el precio");
+        datos[3] = in.readLine();
+
+        if (numero == 0) {
+            System.out.println("Digite el número de fatura al que desea agregarle la línea de detalle.");
+            String num = in.readLine();
+
+            if (gestor.BuscarFactura(num) == -1) {
+                System.out.println("Lo sentimos, esa factura no existe.");
+            } else {
+                gestor.registrarLinea(datos, num);
+            }
+        }
+        return datos;
+    }
+
+
+
+
+
+
+    public static void imprimirFactura() {
+        String[] data = gestor.ListarFacturas();
+        for(String info : data){
+            System.out.println(info);
+        }
+    }
+
+
 }
-//Lunes dos ejercicios
+

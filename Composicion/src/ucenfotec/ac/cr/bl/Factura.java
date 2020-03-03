@@ -1,56 +1,80 @@
 package ucenfotec.ac.cr.bl;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class Factura {
     private String mnumero;
     private String mcliente;
     private Fecha mfecha;
-    private Vector mdetalle;
+    private ArrayList<Linea> mdetalle;
     /* Constructor */
 
-
-    public Factura(String pnumero, String pcliente, int pdia, int pmes, int panio) {
-        mnumero(pnumero);
-        mcliente(pcliente);
-        mfecha = new Fecha(pdia, pmes, panio);
-        mdetalle = new Vector();
-
+    public Factura(){
     }
 
-    private float calcularSubtotal( ){
-        Linea lineaDetalle;
-        float subtotal;
-        subtotal = 0;
-        for(int i = 0; i< mdetalle.size(); i++){
-            lineaDetalle = (Linea) mdetalle.get(i);
-            subtotal = subtotal + lineaDetalle.calcularCosto();
+
+    public Factura(String mnumero,String mcliente,int mdia,int mmes, int manio,Linea lin) {
+        this.mnumero = mnumero;
+        this.mcliente = mcliente;
+        this.mfecha = new Fecha(mdia,mmes,manio);
+        mdetalle = new ArrayList<>();
+    }
+
+
+    public String getMnumero() {
+        return mnumero;
+    }
+
+    public void setMnumero(String mnumero) {
+        this.mnumero = mnumero;
+    }
+
+    public String getMcliente() {
+        return mcliente;
+    }
+
+    public void setMcliente(String mcliente) {
+        this.mcliente = mcliente;
+    }
+
+    public Fecha getMfecha() {
+        return mfecha;
+    }
+
+    public void setMfecha(Fecha mfecha) {
+        this.mfecha = mfecha;
+    }
+
+
+    private double calcularSubtotal(){
+        double retornar = 0.0;
+        Linea LineaDetalle;
+
+        for(Linea linea: mdetalle){
+            LineaDetalle = linea;
+            retornar += LineaDetalle.calcularCosto();
         }
-        return subtotal;
+        return retornar;
     }
 
-    private float calcularImpuesto( ){
-        float impuesto;
+    private double calcularImpuesto( ){
+        double impuesto;
         impuesto = calcularSubtotal()* 13/100;
         return impuesto;
     }
 
-    public float calcularTotal( ){
-        float total;
+    public double calcularTotal( ){
+        double total;
         total = calcularSubtotal() + calcularImpuesto();
         return total;
     }
 
-    public void agregarLinea( int pcantidad,
-                              String pcodigo,
-                              String pdescripcion,
-                              float pprecio ){
-        mdetalle.add( new Linea(pcantidad,pcodigo,
-                pdescripcion, pprecio));
-    }
+    public void agregarLinea(Linea tmplinea) {mdetalle.add(tmplinea);};
 
 
-    public String toString( ){
+
+    public String toString(){
         String msg;
         Linea lineaD;
         msg = "================================"+ "\n";
